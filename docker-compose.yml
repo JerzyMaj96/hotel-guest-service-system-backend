@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: hotel-db-container
+    environment:
+      POSTGRES_USER: hotel_guest_service_system
+      POSTGRES_PASSWORD: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: hotel-mailpit-container
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
