@@ -29,7 +29,12 @@ public class User {
     @NotBlank
     @Column(nullable = false, unique = true)
     @ToString.Include
-    private String name;
+    private String firstName;
+
+    @NotBlank
+    @Column(nullable = false, unique = true)
+    @ToString.Include
+    private String lastName;
 
     @NotBlank
     @Size(min = 8)
