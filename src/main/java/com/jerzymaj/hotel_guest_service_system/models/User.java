@@ -1,6 +1,7 @@
 package com.jerzymaj.hotel_guest_service_system.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jerzymaj.hotel_guest_service_system.enums.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
