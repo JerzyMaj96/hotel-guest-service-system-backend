@@ -5,9 +5,9 @@ services:
     env_file:
       - fragile.env
     environment:
-      POSTGRES_USER: hotel_guest_service_system
-      POSTGRES_PASSWORD: ${DB_USERNAME}
-      POSTGRES_DB: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: hotel_guest_service_system
     ports:
       - "5432:5432"
     volumes:
@@ -17,8 +17,8 @@ services:
     image: axllent/mailpit:latest
     container_name: hotel-mailpit-container
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - "1026:1025"
+      - "8026:8025"
     restart: unless-stopped
 
 volumes:
