@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jerzymaj</groupId>
-    <artifactId>hotel-guest-service-system</artifactId>
+    <artifactId>hotel-user-service-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>hotel-guest-service-system</name>
-    <description>hotel-guest-service-system</description>
+    <name>hotel-user-service-system</name>
+    <description>hotel-user-service-system</description>
     <url/>
     <licenses>
         <license/>

@@ -1,7 +1,7 @@
 package com.jerzymaj.hotel_guest_service_system.services;
 
-import com.jerzymaj.hotel_guest_service_system.models.Guest;
-import com.jerzymaj.hotel_guest_service_system.repositories.GuestRepository;
+import com.jerzymaj.hotel_guest_service_system.models.User;
+import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,16 +15,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    GuestRepository guestRepository;
+    UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Guest guest = guestRepository.findByName(username)
+        User user = userRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
         return new org.springframework.security.core.userdetails.User(
-                guest.getName(),
-                guest.getPassword(),
+                user.getName(),
+                user.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
