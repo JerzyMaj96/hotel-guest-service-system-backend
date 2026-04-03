@@ -2,6 +2,8 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: hotel-db-container
+    env_file:
+      - fragile.env
     environment:
       POSTGRES_USER: hotel_guest_service_system
       POSTGRES_PASSWORD: ${DB_USERNAME}
