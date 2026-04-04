@@ -7,6 +7,7 @@ import com.jerzymaj.hotel_guest_service_system.exceptions.UserNotFoundException;
 import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<User> findAllUsers() {
         return userRepository.findAll();
@@ -41,7 +43,7 @@ public class UserService {
                 .firstName(registerUserDto.firstName())
                 .lastName(registerUserDto.lastName())
                 .email(registerUserDto.email())
-                .password(registerUserDto.password())
+                .password(passwordEncoder.encode(registerUserDto.password()))
                 .userType(UserType.GUEST)
                 .build();
 
