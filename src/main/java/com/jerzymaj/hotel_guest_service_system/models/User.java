@@ -8,8 +8,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,7 +24,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +33,12 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @ToString.Include
     private String firstName;
 
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @ToString.Include
     private String lastName;
 
@@ -49,11 +54,21 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserType userStatus;
+    private UserType userType;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @CreationTimestamp
     @Column(updatable = false)
     @ToString.Include
     private LocalDateTime creationDate;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + userType.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }
