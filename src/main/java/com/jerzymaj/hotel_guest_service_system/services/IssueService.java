@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class IssueService {
@@ -41,6 +43,10 @@ public class IssueService {
                 .build();
 
         return issueRepository.save(issue);
+    }
+
+    public List<Issue> findAllIssuesByUserId(Long userId) {
+        return issueRepository.findAllByUserIdSortedByDate(userId);
     }
 
     public Long getCurrentUserId() {
