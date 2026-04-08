@@ -7,6 +7,7 @@ import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public Issue createIssue(IssueCreateRequestDto issueCreateRequestDto) {
 
         Long currentUserId = getCurrentUserId();
