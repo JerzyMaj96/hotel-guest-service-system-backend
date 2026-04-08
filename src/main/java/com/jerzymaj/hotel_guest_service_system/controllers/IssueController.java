@@ -7,13 +7,11 @@ import com.jerzymaj.hotel_guest_service_system.translator.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("hgss/api/issues")
@@ -34,5 +32,15 @@ public class IssueController {
                 .toUri();
 
         return ResponseEntity.created(location).body(issueResponseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<IssueResponseDto>> getAllIssues(@RequestParam Long userId) {
+
+        List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssuesByUserId(userId).stream()
+                .map(Translator::convertIssueToDto)
+                .toList();
+
+        return ResponseEntity.ok(issueResponseDtoList);
     }
 }
