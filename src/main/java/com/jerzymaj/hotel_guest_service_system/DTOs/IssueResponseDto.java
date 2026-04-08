@@ -10,5 +10,5 @@ public record IssueResponseDto(Long id,
                                String title,
                                IssueStatus status,
                                LocalDateTime creationDate,
-                               String roomNumber) {
+                               int roomNumber) {
 }
