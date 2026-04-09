@@ -7,17 +7,13 @@ import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
-import com.jerzymaj.hotel_guest_service_system.services.AuthenticationFacade;
+import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 

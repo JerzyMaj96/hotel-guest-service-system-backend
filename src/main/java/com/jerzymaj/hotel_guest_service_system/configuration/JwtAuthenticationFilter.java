@@ -1,6 +1,6 @@
 package com.jerzymaj.hotel_guest_service_system.configuration;
 
-import com.jerzymaj.hotel_guest_service_system.services.CustomUserDetailsService;
+import com.jerzymaj.hotel_guest_service_system.security.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

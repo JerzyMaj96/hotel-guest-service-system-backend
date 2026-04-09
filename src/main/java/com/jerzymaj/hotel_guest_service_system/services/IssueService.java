@@ -7,10 +7,9 @@ import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
+import com.jerzymaj.hotel_guest_service_system.security.IAuthenticationFacade;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

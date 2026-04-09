@@ -1,6 +1,6 @@
 package com.jerzymaj.hotel_guest_service_system.configuration;
 
-import com.jerzymaj.hotel_guest_service_system.services.CustomUserDetailsService;
+import com.jerzymaj.hotel_guest_service_system.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

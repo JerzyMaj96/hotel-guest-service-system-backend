@@ -1,4 +1,4 @@
-package com.jerzymaj.hotel_guest_service_system.services;
+package com.jerzymaj.hotel_guest_service_system.security;
 
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
