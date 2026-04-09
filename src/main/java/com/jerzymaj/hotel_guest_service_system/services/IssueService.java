@@ -21,14 +21,15 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Transactional
     public Issue createIssue(IssueCreateRequestDto issueCreateRequestDto) {
 
-        Long currentUserId = getCurrentUserId();
+        String email = authenticationFacade.getAuthenticatedUserEmail();
 
-        User user = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + currentUserId + " not found"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
 
         Issue issue = Issue.builder()
                 .type(issueCreateRequestDto.type())
@@ -47,14 +48,5 @@ public class IssueService {
 
     public List<Issue> findAllIssuesByUserId(Long userId) {
         return issueRepository.findAllByUserIdSortedByDate(userId);
-    }
-
-    public Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"))
-                .getId();
     }
 }
