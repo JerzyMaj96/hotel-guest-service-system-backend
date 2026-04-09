@@ -7,6 +7,7 @@ import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
+import com.jerzymaj.hotel_guest_service_system.services.AuthenticationFacade;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,11 +33,16 @@ public class IssueServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private AuthenticationFacade authenticationFacade;
+
     @InjectMocks
     private IssueService issueService;
 
     @Test
     public void createIssueByUserId_IfSuccess() {
+        String email = "test@gmail.com";
+
         IssueCreateRequestDto issueCreateRequestDto = new IssueCreateRequestDto(
                 IssueType.RECEPTION,
                 "title",
@@ -50,35 +56,18 @@ public class IssueServiceTest {
 
         User user = User.builder()
                 .id(1L)
-                .email("test@gmail.com")
+                .email(email)
                 .build();
 
-        try (MockedStatic<SecurityContextHolder> mockedSecurity = mockStatic(SecurityContextHolder.class)) {
-            SecurityContext securityContext = mock(SecurityContext.class);
-            Authentication authentication = mock(Authentication.class);
+        when(authenticationFacade.getAuthenticatedUserEmail()).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(issueRepository.save(any(Issue.class))).thenAnswer(i -> i.getArguments()[0]);
 
-            mockedSecurity.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getName()).thenReturn("test@gmail.com");
+        Issue actualResult = issueService.createIssue(issueCreateRequestDto);
 
-            when(userRepository.findByEmail("test@gmail.com")).thenReturn(Optional.of(user));
-            when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-            when(issueRepository.save(any(Issue.class))).thenAnswer(invocation -> {
-                Issue issue = invocation.getArgument(0);
-                issue.setId(100L);
-                return issue;
-            });
-
-            Issue actualResult = issueService.createIssue(issueCreateRequestDto);
-
-            assertThat(actualResult).isNotNull();
-            assertThat(actualResult.getId()).isEqualTo(100L);
-            assertThat(actualResult.getTitle()).isEqualTo("title");
-            assertThat(actualResult.getUser()).isEqualTo(user);
-
-            verify(issueRepository).save(any(Issue.class));
-        }
+        assertThat(actualResult.getTitle()).isEqualTo("title");
+        assertThat(actualResult.getUser().getEmail()).isEqualTo(email);
+        verify(issueRepository).save(any(Issue.class));
     }
 }
 
