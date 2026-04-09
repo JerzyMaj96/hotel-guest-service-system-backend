@@ -1,5 +1,5 @@
 package com.jerzymaj.hotel_guest_service_system.services;
 
-public interface AuthenticationFacade {
+public interface IAuthenticationFacade {
     String getAuthenticatedUserEmail();
 }
