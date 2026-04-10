@@ -2,6 +2,7 @@ package com.jerzymaj.hotel_guest_service_system.controllers;
 
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueCreateRequestDto;
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueResponseDto;
+import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import com.jerzymaj.hotel_guest_service_system.translator.Translator;
 import jakarta.validation.Valid;
@@ -42,5 +43,11 @@ public class IssueController {
                 .toList();
 
         return ResponseEntity.ok(issueResponseDtoList);
+    }
+
+    @PatchMapping("/{issueId}/status")
+    public ResponseEntity<Void> updateIssueStatus(@PathVariable Long issueId, @RequestParam IssueStatus issueStatus) {
+        issueService.updateIssueStatus(issueId, issueStatus);
+        return ResponseEntity.noContent().build();
     }
 }
