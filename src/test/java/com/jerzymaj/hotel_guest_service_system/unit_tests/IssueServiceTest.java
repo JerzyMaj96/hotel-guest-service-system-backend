@@ -1,6 +1,7 @@
 package com.jerzymaj.hotel_guest_service_system.unit_tests;
 
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueCreateRequestDto;
+import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueType;
 import com.jerzymaj.hotel_guest_service_system.enums.PreferredTimeOption;
 import com.jerzymaj.hotel_guest_service_system.models.Issue;
@@ -69,7 +70,7 @@ public class IssueServiceTest {
     }
 
     @Test
-    public void findAllIssuesByUserId() {
+    public void findAllIssuesByUserId_IfSuccess() {
         Long userId = 1L;
         Issue issue1 = Issue.builder().id(1L).title("title1").build();
         Issue issue2 = Issue.builder().id(2L).title("title2").build();
@@ -84,6 +85,20 @@ public class IssueServiceTest {
                 .containsExactly(issue1, issue2);
 
         verify(issueRepository).findAllByUserIdSortedByDate(userId);
+    }
+
+    @Test
+    public void updateIssueStatus_IfSuccess() {
+        Long issueId = 1L;
+
+        Issue issue = Issue.builder().id(issueId).status(IssueStatus.NEW).build();
+
+        when(issueRepository.findById(issueId)).thenReturn(Optional.of(issue));
+
+        issueService.updateIssueStatus(issueId, IssueStatus.OPEN);
+
+        assertThat(issue.getStatus()).isEqualTo(IssueStatus.OPEN);
+        verify(issueRepository).findById(issueId);
     }
 }
 
