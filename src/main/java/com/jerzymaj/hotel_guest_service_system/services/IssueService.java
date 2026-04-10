@@ -2,6 +2,7 @@ package com.jerzymaj.hotel_guest_service_system.services;
 
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueCreateRequestDto;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
+import com.jerzymaj.hotel_guest_service_system.exceptions.IssueNotFoundException;
 import com.jerzymaj.hotel_guest_service_system.exceptions.UserNotFoundException;
 import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
@@ -10,6 +11,7 @@ import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.IAuthenticationFacade;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,5 +49,16 @@ public class IssueService {
 
     public List<Issue> findAllIssuesByUserId(Long userId) {
         return issueRepository.findAllByUserIdSortedByDate(userId);
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('TECHNICAL_SUPPORT')")
+    public void updateIssueStatus(Long issueId, IssueStatus issueStatus) {
+
+
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new IssueNotFoundException("Issue with id " + issueId + " not found"));
+
+        issue.setStatus(issueStatus);
     }
 }
