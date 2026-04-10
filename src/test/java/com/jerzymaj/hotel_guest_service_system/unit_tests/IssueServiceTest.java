@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,6 +66,24 @@ public class IssueServiceTest {
         assertThat(actualResult.getTitle()).isEqualTo("title");
         assertThat(actualResult.getUser().getEmail()).isEqualTo(email);
         verify(issueRepository).save(any(Issue.class));
+    }
+
+    @Test
+    public void findAllIssuesByUserId() {
+        Long userId = 1L;
+        Issue issue1 = Issue.builder().id(1L).title("title1").build();
+        Issue issue2 = Issue.builder().id(2L).title("title2").build();
+        List<Issue> expectedIssues = List.of(issue1, issue2);
+
+        when(issueRepository.findAllByUserIdSortedByDate(userId)).thenReturn(expectedIssues);
+
+        List<Issue> actualResult = issueService.findAllIssuesByUserId(userId);
+
+        assertThat(actualResult)
+                .hasSize(2)
+                .containsExactly(issue1, issue2);
+
+        verify(issueRepository).findAllByUserIdSortedByDate(userId);
     }
 }
 
