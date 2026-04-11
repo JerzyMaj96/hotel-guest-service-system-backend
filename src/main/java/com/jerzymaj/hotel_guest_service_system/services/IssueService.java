@@ -9,11 +9,17 @@ import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.IAuthenticationFacade;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @Service
@@ -23,9 +29,10 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
     private final IAuthenticationFacade authenticationFacade;
+    private final JavaMailSender javaMailSender;
 
     @Transactional
-    public Issue createIssue(IssueCreateRequestDto issueCreateRequestDto) {
+    public Issue createIssue(IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
 
         String email = authenticationFacade.getAuthenticatedUserEmail();
 
@@ -37,6 +44,7 @@ public class IssueService {
                 .title(issueCreateRequestDto.title())
                 .description(issueCreateRequestDto.description())
                 .roomNumber(issueCreateRequestDto.roomNumber())
+                .photoPath(issueCreateRequestDto.photoPath())
                 .preferredTimeOption(issueCreateRequestDto.preferredTimeOption())
                 .preferredDate(issueCreateRequestDto.preferredDate())
                 .preferredTime(issueCreateRequestDto.preferredTime())
@@ -44,7 +52,26 @@ public class IssueService {
                 .user(user)
                 .build();
 
-        return issueRepository.save(issue);
+        Issue savedIssue = issueRepository.save(issue);
+
+        sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description(), issueCreateRequestDto.photoPath());
+
+        return savedIssue;
+    }
+
+    private void sendNotificationEmail(User user, String title, String description, String photoPathString) throws MessagingException {
+        Path photoPath = Path.of(photoPathString);
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom(authenticationFacade.getAuthenticatedUserEmail());
+        helper.setTo("tech@hotel.com");
+        helper.setSubject(title + "-" + user.getFirstName() + " " + user.getLastName());
+        helper.setText(description);
+        helper.addAttachment(photoPath.getFileName().toString(), new FileSystemResource(photoPath.toFile()));
+
+        javaMailSender.send(message);
     }
 
     public List<Issue> findAllIssuesByUserId(Long userId) {
