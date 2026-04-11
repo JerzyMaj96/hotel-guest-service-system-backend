@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -72,12 +73,36 @@ public class IssueControllerTest {
 
     @Test
     @WithMockUser(username = "pawel@gmail.com", roles = "GUEST")
-    public void findAllIssuesByUserId() throws Exception {
+    public void findAllIssues() throws Exception {
 
         mockMvc.perform(get("/hgss/api/issues")
                         .param("userId", user.getId().toString())
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    public void updateIssueStatus() throws Exception {
+
+        IssueCreateRequestDto createRequestDto = new IssueCreateRequestDto(IssueType.RECEPTION, "problem",
+                "description", 101, "photoPath", PreferredTimeOption.AS_SOON_AS_POSSIBLE,
+                null, null);
+
+        String response = mockMvc.perform(post("/hgss/api/issues")
+                        .with(SecurityMockMvcRequestPostProcessors.user(user.getEmail()).roles(user.getUserType().name()))
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(createRequestDto)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        long issueId = objectMapper.readTree(response).get("id").asLong();
+
+        mockMvc.perform(patch("/hgss/api/issues/" + issueId + "/status")
+                        .with(SecurityMockMvcRequestPostProcessors.user("tech@hotel.com").roles("TECHNICAL_SUPPORT"))
+                        .param("issueStatus", "OPEN"))
+                .andExpect(status().isNoContent());
     }
 }
