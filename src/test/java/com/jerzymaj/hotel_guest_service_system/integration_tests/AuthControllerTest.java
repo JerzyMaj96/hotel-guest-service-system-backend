@@ -45,9 +45,9 @@ public class AuthControllerTest {
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(registerUserDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstName").value("Paweł"))
-                .andExpect(jsonPath("$.lastName").value("Kowalski"))
-                .andExpect(jsonPath("$.email").value("pawel@gmail.com"));
+                .andExpect(jsonPath("$.firstName").value(registerUserDto.firstName()))
+                .andExpect(jsonPath("$.lastName").value(registerUserDto.lastName()))
+                .andExpect(jsonPath("$.email").value(registerUserDto.email()));
     }
 
     @Test
