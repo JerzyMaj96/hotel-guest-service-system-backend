@@ -6,9 +6,7 @@ import com.jerzymaj.hotel_guest_service_system.enums.IssueType;
 import com.jerzymaj.hotel_guest_service_system.enums.PreferredTimeOption;
 import com.jerzymaj.hotel_guest_service_system.enums.UserType;
 import com.jerzymaj.hotel_guest_service_system.models.User;
-import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
-import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,9 +39,11 @@ public class IssueControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private User user;
+
     @BeforeEach
     public void setUp() {
-        User user = User.builder()
+        user = User.builder()
                 .firstName("Paweł")
                 .lastName("Kowalski")
                 .email("pawel@gmail.com")
@@ -68,5 +68,16 @@ public class IssueControllerTest {
                 .andExpect(jsonPath("$.type").value(IssueType.RECEPTION.name()))
                 .andExpect(jsonPath("$.title").value(issueCreateRequestDto.title()))
                 .andExpect(jsonPath("$.roomNumber").value(issueCreateRequestDto.roomNumber()));
+    }
+
+    @Test
+    @WithMockUser(username = "pawel@gmail.com", roles = "GUEST")
+    public void findAllIssuesByUserId() throws Exception {
+
+        mockMvc.perform(get("/hgss/api/issues")
+                        .param("userId", user.getId().toString())
+                        .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
     }
 }
