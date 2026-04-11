@@ -1,15 +1,21 @@
 package com.jerzymaj.hotel_guest_service_system.integration_tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jerzymaj.hotel_guest_service_system.DTOs.LoginRequest;
 import com.jerzymaj.hotel_guest_service_system.DTOs.RegisterUserDto;
-import com.jerzymaj.hotel_guest_service_system.services.UserService;
+import com.jerzymaj.hotel_guest_service_system.enums.UserType;
+import com.jerzymaj.hotel_guest_service_system.models.User;
+import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,12 +23,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@Transactional
 public class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper =  new ObjectMapper();
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void registerUser() throws Exception {
@@ -35,5 +48,28 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.firstName").value("Paweł"))
                 .andExpect(jsonPath("$.lastName").value("Kowalski"))
                 .andExpect(jsonPath("$.email").value("pawel@gmail.com"));
+    }
+
+    @Test
+    public void loginUser() throws Exception {
+        userRepository.deleteAll();
+
+        User user = User.builder()
+                .firstName("Paweł")
+                .lastName("Kowalski")
+                .email("pawel@gmail.com")
+                .password(passwordEncoder.encode("secret123"))
+                .userType(UserType.GUEST)
+                .build();
+
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest("pawel@gmail.com", "secret123");
+
+        mockMvc.perform(post("/hgss/api/auth/login")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andExpect(result -> assertThat(result.getResponse().getContentAsString()).isNotEmpty());
     }
 }
