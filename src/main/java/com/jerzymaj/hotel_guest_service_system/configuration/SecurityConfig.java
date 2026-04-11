@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/hgss/api/auth/**").permitAll()
                         .requestMatchers("/hgss/api/issues/**").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/hgss/api/issues/**/status").hasRole("TECHNICAL_SUPPORT")
+                        .requestMatchers(HttpMethod.PATCH, "/hgss/api/issues/*/status").hasRole("TECHNICAL_SUPPORT")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
