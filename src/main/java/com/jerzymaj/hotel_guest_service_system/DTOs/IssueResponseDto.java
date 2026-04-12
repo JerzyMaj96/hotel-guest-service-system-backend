@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record IssueResponseDto(Long id,
                                IssueType type,
                                String title,
+                               String photoUrl,
                                IssueStatus status,
                                LocalDateTime creationDate,
                                int roomNumber) {

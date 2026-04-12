@@ -16,6 +16,7 @@ public class Translator {
                 issue.getId(),
                 issue.getType(),
                 issue.getTitle(),
+                issue.getPhotoPath(),
                 issue.getStatus(),
                 issue.getCreationDate(),
                 issue.getRoomNumber()
