@@ -8,8 +8,10 @@ import com.jerzymaj.hotel_guest_service_system.translator.Translator;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -22,10 +24,12 @@ public class IssueController {
 
     private final IssueService issueService;
 
-    @PostMapping
-    public ResponseEntity<IssueResponseDto> createIssue(@Valid @RequestBody IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<IssueResponseDto> createIssue(@RequestParam("photo") MultipartFile photo,
+                                                        @Valid @RequestBody IssueCreateRequestDto issueCreateRequestDto)
+            throws MessagingException {
 
-        IssueResponseDto issueResponseDto = Translator.convertIssueToDto(issueService.createIssue(issueCreateRequestDto));
+        IssueResponseDto issueResponseDto = Translator.convertIssueToDto(issueService.createIssue(photo, issueCreateRequestDto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
