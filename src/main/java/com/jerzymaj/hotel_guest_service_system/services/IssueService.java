@@ -18,9 +18,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,19 +37,29 @@ public class IssueService {
     private final JavaMailSender javaMailSender;
 
     @Transactional
-    public Issue createIssue(IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
+    public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
 
         String email = authenticationFacade.getAuthenticatedUserEmail();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
 
+        String fileName = null;
+
+        if (photo != null && !photo.isEmpty()) {
+            try {
+                fileName = savePhoto(photo);
+            } catch (IOException ex) {
+                throw new RuntimeException("Failed to save photo", ex);
+            }
+        }
+
         Issue issue = Issue.builder()
                 .type(issueCreateRequestDto.type())
                 .title(issueCreateRequestDto.title())
                 .description(issueCreateRequestDto.description())
                 .roomNumber(issueCreateRequestDto.roomNumber())
-                .photoPath(issueCreateRequestDto.photoPath())
+                .photoPath(fileName)
                 .preferredTimeOption(issueCreateRequestDto.preferredTimeOption())
                 .preferredDate(issueCreateRequestDto.preferredDate())
                 .preferredTime(issueCreateRequestDto.preferredTime())
@@ -57,6 +72,13 @@ public class IssueService {
         sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description());
 
         return savedIssue;
+    }
+
+    private String savePhoto(MultipartFile photo) throws IOException {
+        String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+        Path filePath = Paths.get("upload-dir/" + fileName).toAbsolutePath();
+        Files.copy(photo.getInputStream(), filePath);
+        return fileName;
     }
 
     private void sendNotificationEmail(User user, String title, String description) throws MessagingException {
@@ -78,7 +100,6 @@ public class IssueService {
     @Transactional
     @PreAuthorize("hasRole('TECHNICAL_SUPPORT')")
     public void updateIssueStatus(Long issueId, IssueStatus issueStatus) {
-
 
         Issue issue = issueRepository.findById(issueId)
                 .orElseThrow(() -> new IssueNotFoundException("Issue with id " + issueId + " not found"));
