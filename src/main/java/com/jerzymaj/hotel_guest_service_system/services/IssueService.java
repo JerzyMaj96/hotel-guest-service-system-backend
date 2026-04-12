@@ -76,7 +76,7 @@ public class IssueService {
 
     private String savePhoto(MultipartFile photo) throws IOException {
         String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
-        Path uploadDirectory = Paths.get("upload-dir/" + fileName).toAbsolutePath();
+        Path uploadDirectory = Paths.get("upload-dir").toAbsolutePath();
         if (!Files.exists(uploadDirectory)) {
             Files.createDirectories(uploadDirectory);
         }
