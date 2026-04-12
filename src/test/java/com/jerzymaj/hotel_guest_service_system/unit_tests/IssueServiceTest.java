@@ -10,13 +10,13 @@ import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
+import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class IssueServiceTest {
     private IssueService issueService;
 
     @Test
-    public void createIssueByUserId_IfSuccess() {
+    public void createIssueByUserId_IfSuccess() throws MessagingException {
         String email = "test@gmail.com";
 
         IssueCreateRequestDto issueCreateRequestDto = new IssueCreateRequestDto(

@@ -5,6 +5,7 @@ import com.jerzymaj.hotel_guest_service_system.DTOs.IssueResponseDto;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import com.jerzymaj.hotel_guest_service_system.translator.Translator;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class IssueController {
     private final IssueService issueService;
 
     @PostMapping
-    public ResponseEntity<IssueResponseDto> createIssue(@Valid @RequestBody IssueCreateRequestDto issueCreateRequestDto) {
+    public ResponseEntity<IssueResponseDto> createIssue(@Valid @RequestBody IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
 
         IssueResponseDto issueResponseDto = Translator.convertIssueToDto(issueService.createIssue(issueCreateRequestDto));
 
