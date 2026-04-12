@@ -25,8 +25,8 @@ public class IssueController {
     private final IssueService issueService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<IssueResponseDto> createIssue(@RequestParam("photo") MultipartFile photo,
-                                                        @Valid @RequestBody IssueCreateRequestDto issueCreateRequestDto)
+    public ResponseEntity<IssueResponseDto> createIssue(@RequestPart(value = "photo", required = false) MultipartFile photo,
+                                                        @Valid @RequestPart(value = "issue") IssueCreateRequestDto issueCreateRequestDto)
             throws MessagingException {
 
         IssueResponseDto issueResponseDto = Translator.convertIssueToDto(issueService.createIssue(photo, issueCreateRequestDto));
