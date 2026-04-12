@@ -54,14 +54,12 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
-        sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description(), issueCreateRequestDto.photoPath());
+        sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description());
 
         return savedIssue;
     }
 
-    private void sendNotificationEmail(User user, String title, String description, String photoPathString) throws MessagingException {
-        Path photoPath = Path.of(photoPathString);
-
+    private void sendNotificationEmail(User user, String title, String description) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
@@ -69,7 +67,6 @@ public class IssueService {
         helper.setTo("tech@hotel.com");
         helper.setSubject(title + "-" + user.getFirstName() + " " + user.getLastName());
         helper.setText(description);
-        helper.addAttachment(photoPath.getFileName().toString(), new FileSystemResource(photoPath.toFile()));
 
         javaMailSender.send(message);
     }
