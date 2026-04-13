@@ -11,11 +11,16 @@ import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +40,9 @@ public class IssueServiceTest {
     @Mock
     private AuthenticationFacade authenticationFacade;
 
+    @Mock
+    private JavaMailSender javaMailSender;
+
     @InjectMocks
     private IssueService issueService;
 
@@ -42,12 +50,15 @@ public class IssueServiceTest {
     public void createIssueByUserId_IfSuccess() throws MessagingException {
         String email = "test@gmail.com";
 
+        MultipartFile photo = new MockMultipartFile("photo", "test.jpg", "image/jpeg",
+                "content".getBytes());
+
         IssueCreateRequestDto issueCreateRequestDto = new IssueCreateRequestDto(
                 IssueType.RECEPTION,
                 "title",
                 "description",
                 101,
-                "this/is/photo/path",
+                null,
                 PreferredTimeOption.AS_SOON_AS_POSSIBLE,
                 null,
                 null
@@ -58,15 +69,20 @@ public class IssueServiceTest {
                 .email(email)
                 .build();
 
+        MimeMessage message = mock(MimeMessage.class);
+
         when(authenticationFacade.getAuthenticatedUserEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(issueRepository.save(any(Issue.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(javaMailSender.createMimeMessage()).thenReturn(message);
 
-        Issue actualResult = issueService.createIssue(issueCreateRequestDto);
+        Issue actualResult = issueService.createIssue(photo, issueCreateRequestDto);
 
         assertThat(actualResult.getTitle()).isEqualTo("title");
         assertThat(actualResult.getUser().getEmail()).isEqualTo(email);
+        assertThat(actualResult.getPhotoPath()).contains("test.jpg");
         verify(issueRepository).save(any(Issue.class));
+        verify(javaMailSender).send(any(MimeMessage.class));
     }
 
     @Test
