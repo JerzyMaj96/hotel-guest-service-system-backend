@@ -24,11 +24,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(properties = "management.health.mail.enabled=false")
 @ActiveProfiles("test")
@@ -70,7 +73,7 @@ public class IssueControllerTest {
         issueCreateRequestDto = new IssueCreateRequestDto(IssueType.RECEPTION, "problem",
                 "description", 101, null, PreferredTimeOption.AS_SOON_AS_POSSIBLE, null, null);
 
-        photoPart = new MockMultipartFile("photo", "test.txt", "image/jpeg",
+        photoPart = new MockMultipartFile("photo", "test.jpg", "image/jpeg",
                 "content".getBytes());
 
         issuePart = new MockMultipartFile("issue", "", "application/json",
@@ -102,6 +105,29 @@ public class IssueControllerTest {
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    @WithMockUser(roles = "TECHNICAL_SUPPORT")
+    public void getPhoto_IfSuccess() throws Exception {
+
+        String fileName = photoPart.getOriginalFilename();
+        Path uploadPath = Paths.get("upload-dir").toAbsolutePath();
+
+        if(!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        Path filePath = uploadPath.resolve(fileName);
+        Files.copy(photoPart.getInputStream(), filePath);
+
+        try {
+            mockMvc.perform(get("/hgss/api/issues/photos/{fileName}", fileName))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType("image/jpeg"));
+        } finally {
+            Files.deleteIfExists(filePath);
+        }
     }
 
     @Test
