@@ -8,13 +8,18 @@ import com.jerzymaj.hotel_guest_service_system.translator.Translator;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -48,6 +53,20 @@ public class IssueController {
                 .toList();
 
         return ResponseEntity.ok(issueResponseDtoList);
+    }
+
+    @GetMapping("/photos/{fileName}")
+    public ResponseEntity<Resource> getPhoto (@PathVariable String fileName) throws MalformedURLException {
+        Path filePath = Paths.get("upload-dir").toAbsolutePath().resolve(fileName);
+        Resource resource = new UrlResource(filePath.toUri());
+        
+        if (!resource.exists() && !resource.isReadable()) {
+            throw new RuntimeException("Could not read file: " + fileName);
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
     }
 
     @PatchMapping("/{issueId}/status")
