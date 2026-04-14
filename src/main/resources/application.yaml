@@ -35,7 +35,7 @@ spring:
         format_sql: true
   mail:
     host: localhost
-    port: 1025
+    port: 1026
     properties:
       mail:
         smtp:
