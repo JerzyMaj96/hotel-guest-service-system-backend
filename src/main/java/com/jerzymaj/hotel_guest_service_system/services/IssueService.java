@@ -13,7 +13,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +35,9 @@ public class IssueService {
     private final UserRepository userRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final JavaMailSender javaMailSender;
+
+    @Value("${storage.upload.dir:upload-dir}")
+    private String uploadDir;
 
     @Transactional
     public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
