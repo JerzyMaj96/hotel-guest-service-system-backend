@@ -66,7 +66,6 @@ public class IssueService {
                 .preferredTimeOption(issueCreateRequestDto.preferredTimeOption())
                 .preferredDate(issueCreateRequestDto.preferredDate())
                 .preferredTime(issueCreateRequestDto.preferredTime())
-                .status(IssueStatus.NEW)
                 .user(user)
                 .build();
 
