@@ -46,7 +46,7 @@ public class IssueController {
     }
 
     @GetMapping
-    public ResponseEntity<List<IssueResponseDto>> getAllIssues(@RequestParam Long userId) {
+    public ResponseEntity<List<IssueResponseDto>> getAllIssues(@RequestParam Long userId) { // todo sprawdzić tut ten userId
 
         List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssuesByUserId(userId).stream()
                 .map(Translator::convertIssueToDto)
@@ -56,7 +56,7 @@ public class IssueController {
     }
 
     @GetMapping("/photos/{fileName}")
-    public ResponseEntity<Resource> getPhoto (@PathVariable String fileName) throws MalformedURLException {
+    public ResponseEntity<Resource> getPhoto (@PathVariable String fileName) throws MalformedURLException { // todo dać tu może zmienną w upload-dir
         Path filePath = Paths.get("upload-dir").toAbsolutePath().resolve(fileName);
         Resource resource = new UrlResource(filePath.toUri());
         
