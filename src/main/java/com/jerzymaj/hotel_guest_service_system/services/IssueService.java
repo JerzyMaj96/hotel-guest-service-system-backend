@@ -36,7 +36,7 @@ public class IssueService {
     private final IAuthenticationFacade authenticationFacade;
     private final JavaMailSender javaMailSender;
 
-    @Value("${storage.upload.dir:upload-dir}")
+    @Value("${storage.upload-dir:upload-dir}")
     private String uploadDir;
 
     @Transactional
