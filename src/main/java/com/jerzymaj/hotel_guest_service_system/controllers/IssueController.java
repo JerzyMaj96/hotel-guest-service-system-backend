@@ -46,9 +46,9 @@ public class IssueController {
     }
 
     @GetMapping
-    public ResponseEntity<List<IssueResponseDto>> getAllIssues(@RequestParam Long userId) { // todo sprawdzić tut ten userId
+    public ResponseEntity<List<IssueResponseDto>> getAllIssues() {
 
-        List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssuesByUserId(userId).stream()
+        List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssuesForAuthenticatedUser().stream()
                 .map(Translator::convertIssueToDto)
                 .toList();
 
