@@ -12,8 +12,8 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     @Query("""
             SELECT i
             FROM Issue i
-            WHERE i.user.id = :userId
+            WHERE i.user.email = :userEmail
             ORDER BY i.creationDate DESC
             """)
-    List<Issue> findAllByUserIdSortedByDate(@Param("userId") Long userId);
+    List<Issue> findAllByUserEmailSortedByDate(@Param("userEmail") String userEmail);
 }

@@ -99,8 +99,10 @@ public class IssueService {
         javaMailSender.send(message);
     }
 
-    public List<Issue> findAllIssuesByUserId(Long userId) {
-        return issueRepository.findAllByUserIdSortedByDate(userId);
+    public List<Issue> findAllIssuesForAuthenticatedUser() {
+        String email = authenticationFacade.getAuthenticatedUserEmail();
+
+        return issueRepository.findAllByUserEmailSortedByDate(email);
     }
 
     @Transactional
