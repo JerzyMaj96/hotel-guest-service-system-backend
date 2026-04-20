@@ -13,6 +13,19 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  backend:
+    image: jerzyk437/hgss-backend:1.5
+    container_name: hgss-backend-container
+    env_file:
+      - fragile.env
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
   mailpit:
     image: axllent/mailpit:latest
     container_name: hotel-mailpit-container
