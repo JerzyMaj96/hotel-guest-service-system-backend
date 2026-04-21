@@ -20,10 +20,13 @@ services:
       - fragile.env
     environment:
       JWT_SECRET: ${JWT_SECRET}
+      DOCKER_DB_USERNAME: ${DB_USERNAME}
+      DOCKER_DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
   mailpit:
