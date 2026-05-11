@@ -34,7 +34,6 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
     private final IAuthenticationFacade authenticationFacade;
-    private final JavaMailSender javaMailSender;
     private final EmailService emailService;
 
     @Value("${storage.upload-dir:upload-dir}")
@@ -86,18 +85,6 @@ public class IssueService {
         Path filePath = uploadDirectory.resolve(fileName);
         Files.copy(photo.getInputStream(), filePath);
         return fileName;
-    }
-
-    private void sendNotificationEmail(User user, String title, String description) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-        helper.setFrom(authenticationFacade.getAuthenticatedUserEmail());
-        helper.setTo("tech@hotel.com");
-        helper.setSubject(title + "-" + user.getFirstName() + " " + user.getLastName());
-        helper.setText(description);
-
-        javaMailSender.send(message);
     }
 
     public List<Issue> findAllIssuesForAuthenticatedUser() {
