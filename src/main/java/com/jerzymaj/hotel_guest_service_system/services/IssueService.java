@@ -35,6 +35,7 @@ public class IssueService {
     private final UserRepository userRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
 
     @Value("${storage.upload-dir:upload-dir}")
     private String uploadDir;
@@ -71,7 +72,7 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
-        sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description());
+        emailService.sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description());
 
         return savedIssue;
     }
