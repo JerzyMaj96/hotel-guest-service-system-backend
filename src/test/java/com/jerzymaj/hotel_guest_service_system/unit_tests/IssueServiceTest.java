@@ -8,7 +8,7 @@ import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
-import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
+import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +37,7 @@ public class IssueServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private AuthenticationFacade authenticationFacade;
+    private AuthenticationFacadeImpl authenticationFacade;
 
     @Mock
     private JavaMailSender javaMailSender;

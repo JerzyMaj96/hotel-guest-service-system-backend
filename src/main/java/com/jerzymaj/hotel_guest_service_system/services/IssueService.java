@@ -9,8 +9,7 @@ import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
-import com.jerzymaj.hotel_guest_service_system.security.IAuthenticationFacade;
-import jakarta.mail.MessagingException;
+import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +25,7 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
-    private final IAuthenticationFacade authenticationFacade;
+    private final AuthenticationFacade authenticationFacade;
     private final EmailService emailService;
     private final StorageService storageService;
 

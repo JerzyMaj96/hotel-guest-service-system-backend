@@ -1,7 +1,7 @@
 package com.jerzymaj.hotel_guest_service_system.services;
 
 import com.jerzymaj.hotel_guest_service_system.models.User;
-import com.jerzymaj.hotel_guest_service_system.security.IAuthenticationFacade;
+import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
-    private final IAuthenticationFacade authenticationFacade;
+    private final AuthenticationFacade authenticationFacade;
 
     @Async
     public void sendNotificationEmail(User user, String title, String description) {
