@@ -9,24 +9,15 @@ import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.IAuthenticationFacade;
-import com.jerzymaj.hotel_guest_service_system.security.StorageService;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

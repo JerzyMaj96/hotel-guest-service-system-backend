@@ -1,4 +1,4 @@
-package com.jerzymaj.hotel_guest_service_system.security;
+package com.jerzymaj.hotel_guest_service_system.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
