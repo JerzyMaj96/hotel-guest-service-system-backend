@@ -31,10 +31,7 @@ public class IssueService {
 
     public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
 
-        String email = authenticationFacade.getAuthenticatedUserEmail();
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
+        User user = getAuthenticatedUser();
 
         String fileName = null;
 
@@ -79,5 +76,12 @@ public class IssueService {
                 .orElseThrow(() -> new IssueNotFoundException("Issue with id " + issueId + " not found"));
 
         issue.setStatus(issueStatus);
+    }
+
+    private User getAuthenticatedUser() {
+        String email = authenticationFacade.getAuthenticatedUserEmail();
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
     }
 }
