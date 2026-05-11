@@ -9,6 +9,7 @@ import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.IAuthenticationFacade;
+import com.jerzymaj.hotel_guest_service_system.security.StorageService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
@@ -35,9 +36,7 @@ public class IssueService {
     private final UserRepository userRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final EmailService emailService;
-
-    @Value("${storage.upload-dir:upload-dir}")
-    private String uploadDir;
+    private final StorageService storageService;
 
     @Transactional
     public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
@@ -51,7 +50,7 @@ public class IssueService {
 
         if (photo != null && !photo.isEmpty()) {
             try {
-                fileName = savePhoto(photo);
+                fileName = storageService.savePhoto(photo);
             } catch (IOException ex) {
                 throw new RuntimeException("Failed to save photo", ex);
             }
@@ -74,17 +73,6 @@ public class IssueService {
         emailService.sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description());
 
         return savedIssue;
-    }
-
-    private String savePhoto(MultipartFile photo) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
-        Path uploadDirectory = Paths.get(uploadDir).toAbsolutePath();
-        if (!Files.exists(uploadDirectory)) {
-            Files.createDirectories(uploadDirectory);
-        }
-        Path filePath = uploadDirectory.resolve(fileName);
-        Files.copy(photo.getInputStream(), filePath);
-        return fileName;
     }
 
     public List<Issue> findAllIssuesForAuthenticatedUser() {
