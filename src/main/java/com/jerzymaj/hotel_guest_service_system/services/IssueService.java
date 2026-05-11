@@ -3,6 +3,7 @@ package com.jerzymaj.hotel_guest_service_system.services;
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueCreateRequestDto;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
 import com.jerzymaj.hotel_guest_service_system.exceptions.IssueNotFoundException;
+import com.jerzymaj.hotel_guest_service_system.exceptions.PhotoStorageException;
 import com.jerzymaj.hotel_guest_service_system.exceptions.UserNotFoundException;
 import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
@@ -40,7 +41,7 @@ public class IssueService {
             try {
                 fileName = storageService.savePhoto(photo);
             } catch (IOException ex) {
-                throw new RuntimeException("Failed to save photo", ex);
+                throw new PhotoStorageException("Failed to save photo", ex);
             }
         }
 
