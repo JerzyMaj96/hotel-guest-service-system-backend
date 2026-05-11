@@ -29,7 +29,7 @@ public class IssueService {
     private final EmailService emailService;
     private final StorageService storageService;
 
-    public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) throws MessagingException {
+    public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) {
 
         User user = getAuthenticatedUser();
 
