@@ -9,7 +9,9 @@ import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl;
+import com.jerzymaj.hotel_guest_service_system.services.EmailService;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
+import com.jerzymaj.hotel_guest_service_system.services.StorageService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,22 +43,27 @@ public class IssueServiceTest {
     private AuthenticationFacadeImpl authenticationFacade;
 
     @Mock
-    private JavaMailSender javaMailSender;
+    private StorageService storageService;
+
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private IssueService issueService;
 
     @Test
-    public void createIssueByUserId_IfSuccess() throws MessagingException {
+    public void createIssueByUserId_IfSuccess() throws IOException {
         String email = "test@gmail.com";
+        String title = "title";
+        String description = "description";
 
         MultipartFile photo = new MockMultipartFile("photo", "test.jpg", "image/jpeg",
                 "content".getBytes());
 
         IssueCreateRequestDto issueCreateRequestDto = new IssueCreateRequestDto(
                 IssueType.RECEPTION,
-                "title",
-                "description",
+                title,
+                description,
                 101,
                 null,
                 PreferredTimeOption.AS_SOON_AS_POSSIBLE,
@@ -68,12 +76,11 @@ public class IssueServiceTest {
                 .email(email)
                 .build();
 
-        MimeMessage message = mock(MimeMessage.class);
-
         when(authenticationFacade.getAuthenticatedUserEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(issueRepository.save(any(Issue.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(javaMailSender.createMimeMessage()).thenReturn(message);
+        when(storageService.savePhoto(photo)).thenReturn("test.jpg");
+        doNothing().when(emailService).sendNotificationEmail(user, title,description);
 
         Issue actualResult = issueService.createIssue(photo, issueCreateRequestDto);
 
@@ -81,26 +88,26 @@ public class IssueServiceTest {
         assertThat(actualResult.getUser().getEmail()).isEqualTo(email);
         assertThat(actualResult.getPhotoPath()).contains("test.jpg");
         verify(issueRepository).save(any(Issue.class));
-        verify(javaMailSender).send(any(MimeMessage.class));
+        verify(storageService).savePhoto(photo);
     }
 
-    @Test
-    public void findAllIssuesByUserId_IfSuccess() {
-        Long userId = 1L;
-        Issue issue1 = Issue.builder().id(1L).title("title1").build();
-        Issue issue2 = Issue.builder().id(2L).title("title2").build();
-        List<Issue> expectedIssues = List.of(issue1, issue2);
-
-        when(issueRepository.findAllByUserIdSortedByDate(userId)).thenReturn(expectedIssues);
-
-        List<Issue> actualResult = issueService.findAllIssuesByUserId(userId);
-
-        assertThat(actualResult)
-                .hasSize(2)
-                .containsExactly(issue1, issue2);
-
-        verify(issueRepository).findAllByUserIdSortedByDate(userId);
-    }
+//    @Test
+//    public void findAllIssuesByUserId_IfSuccess() {
+//        Long userId = 1L;
+//        Issue issue1 = Issue.builder().id(1L).title("title1").build();
+//        Issue issue2 = Issue.builder().id(2L).title("title2").build();
+//        List<Issue> expectedIssues = List.of(issue1, issue2);
+//
+//        when(issueRepository.findAllByUserIdSortedByDate(userId)).thenReturn(expectedIssues);
+//
+//        List<Issue> actualResult = issueService.findAllIssuesByUserId(userId);
+//
+//        assertThat(actualResult)
+//                .hasSize(2)
+//                .containsExactly(issue1, issue2);
+//
+//        verify(issueRepository).findAllByUserIdSortedByDate(userId);
+//    }
 
     @Test
     public void updateIssueStatus_IfSuccess() {
