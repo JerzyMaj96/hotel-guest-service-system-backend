@@ -1,5 +1,6 @@
-package com.jerzymaj.hotel_guest_service_system.services;
+package com.jerzymaj.hotel_guest_service_system.services.impl;
 
+import com.jerzymaj.hotel_guest_service_system.services.PhotoStorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,11 +12,12 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
-public class StorageService {
+public class PhotoStorageServiceImpl implements PhotoStorageService {
 
     @Value("${storage.upload-dir:upload-dir}")
     private String uploadDir;
 
+    @Override
     public String savePhoto(MultipartFile photo) throws IOException {
         String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
         Path uploadDirectory = Paths.get(uploadDir).toAbsolutePath();

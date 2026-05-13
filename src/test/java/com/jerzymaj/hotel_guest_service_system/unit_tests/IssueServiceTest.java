@@ -11,7 +11,7 @@ import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl;
 import com.jerzymaj.hotel_guest_service_system.services.EmailService;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
-import com.jerzymaj.hotel_guest_service_system.services.StorageService;
+import com.jerzymaj.hotel_guest_service_system.services.PhotoStorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,7 +40,7 @@ public class IssueServiceTest {
     private AuthenticationFacadeImpl authenticationFacade;
 
     @Mock
-    private StorageService storageService;
+    private PhotoStorageService photoStorageService;
 
     @Mock
     private EmailService emailService;
@@ -76,7 +76,7 @@ public class IssueServiceTest {
         when(authenticationFacade.getAuthenticatedUserEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(issueRepository.save(any(Issue.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(storageService.savePhoto(photo)).thenReturn("test.jpg");
+        when(photoStorageService.savePhoto(photo)).thenReturn("test.jpg");
         doNothing().when(emailService).sendNotificationEmail(user, title,description);
 
         Issue actualResult = issueService.createIssue(photo, issueCreateRequestDto);
@@ -85,7 +85,7 @@ public class IssueServiceTest {
         assertThat(actualResult.getUser().getEmail()).isEqualTo(email);
         assertThat(actualResult.getPhotoPath()).contains("test.jpg");
         verify(issueRepository).save(any(Issue.class));
-        verify(storageService).savePhoto(photo);
+        verify(photoStorageService).savePhoto(photo);
     }
 
     @Test

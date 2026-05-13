@@ -27,7 +27,7 @@ public class IssueService {
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
     private final EmailService emailService;
-    private final StorageService storageService;
+    private final PhotoStorageService photoStorageService;
 
     @Transactional
     public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) {
@@ -38,7 +38,7 @@ public class IssueService {
 
         if (photo != null && !photo.isEmpty()) {
             try {
-                fileName = storageService.savePhoto(photo);
+                fileName = photoStorageService.savePhoto(photo);
             } catch (IOException ex) {
                 throw new PhotoStorageException("Failed to save photo", ex);
             }
