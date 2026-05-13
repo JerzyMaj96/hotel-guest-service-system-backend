@@ -33,15 +33,10 @@ public class IssueService {
     public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) {
 
         User user = getAuthenticatedUser();
-
         String fileName = null;
 
         if (photo != null && !photo.isEmpty()) {
-            try {
-                fileName = photoStorageService.savePhoto(photo);
-            } catch (IOException ex) {
-                throw new PhotoStorageException("Failed to save photo", ex);
-            }
+            fileName = photoStorageService.savePhoto(photo);
         }
 
         Issue issue = Issue.builder()

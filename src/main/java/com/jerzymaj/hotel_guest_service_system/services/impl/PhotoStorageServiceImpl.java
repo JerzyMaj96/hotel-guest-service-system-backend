@@ -1,5 +1,6 @@
 package com.jerzymaj.hotel_guest_service_system.services.impl;
 
+import com.jerzymaj.hotel_guest_service_system.exceptions.PhotoStorageException;
 import com.jerzymaj.hotel_guest_service_system.services.PhotoStorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,18 @@ public class PhotoStorageServiceImpl implements PhotoStorageService {
     private String uploadDir;
 
     @Override
-    public String savePhoto(MultipartFile photo) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
-        Path uploadDirectory = Paths.get(uploadDir).toAbsolutePath();
-        if (!Files.exists(uploadDirectory)) {
-            Files.createDirectories(uploadDirectory);
+    public String savePhoto(MultipartFile photo) {
+        try {
+            String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+            Path uploadDirectory = Paths.get(uploadDir).toAbsolutePath();
+            if (!Files.exists(uploadDirectory)) {
+                Files.createDirectories(uploadDirectory);
+            }
+            Path filePath = uploadDirectory.resolve(fileName);
+            Files.copy(photo.getInputStream(), filePath);
+            return fileName;
+        } catch (IOException ex) {
+            throw new PhotoStorageException("Failed to save photo",ex);
         }
-        Path filePath = uploadDirectory.resolve(fileName);
-        Files.copy(photo.getInputStream(), filePath);
-        return fileName;
     }
 }
