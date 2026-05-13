@@ -3,7 +3,6 @@ package com.jerzymaj.hotel_guest_service_system.services;
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueCreateRequestDto;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
 import com.jerzymaj.hotel_guest_service_system.exceptions.IssueNotFoundException;
-import com.jerzymaj.hotel_guest_service_system.exceptions.PhotoStorageException;
 import com.jerzymaj.hotel_guest_service_system.exceptions.UserNotFoundException;
 import com.jerzymaj.hotel_guest_service_system.models.Issue;
 import com.jerzymaj.hotel_guest_service_system.models.User;
@@ -16,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
