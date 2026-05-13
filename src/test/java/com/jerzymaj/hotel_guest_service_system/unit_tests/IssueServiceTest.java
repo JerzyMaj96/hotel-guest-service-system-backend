@@ -12,15 +12,15 @@ import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl
 import com.jerzymaj.hotel_guest_service_system.services.EmailService;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import com.jerzymaj.hotel_guest_service_system.services.StorageService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -91,23 +91,25 @@ public class IssueServiceTest {
         verify(storageService).savePhoto(photo);
     }
 
-//    @Test
-//    public void findAllIssuesByUserId_IfSuccess() {
-//        Long userId = 1L;
-//        Issue issue1 = Issue.builder().id(1L).title("title1").build();
-//        Issue issue2 = Issue.builder().id(2L).title("title2").build();
-//        List<Issue> expectedIssues = List.of(issue1, issue2);
-//
-//        when(issueRepository.findAllByUserIdSortedByDate(userId)).thenReturn(expectedIssues);
-//
-//        List<Issue> actualResult = issueService.findAllIssuesByUserId(userId);
-//
-//        assertThat(actualResult)
-//                .hasSize(2)
-//                .containsExactly(issue1, issue2);
-//
-//        verify(issueRepository).findAllByUserIdSortedByDate(userId);
-//    }
+    @Test
+    public void findAllIssuesForAuthenticatedUser_IfSuccess() {
+        String email = "test@gmail.com";
+
+        Issue issue1 = Issue.builder().id(1L).title("title1").build();
+        Issue issue2 = Issue.builder().id(2L).title("title2").build();
+        List<Issue> expectedIssues = List.of(issue1, issue2);
+
+        when(authenticationFacade.getAuthenticatedUserEmail()).thenReturn(email);
+        when(issueRepository.findAllByUserEmailSortedByDate(email)).thenReturn(expectedIssues);
+
+        List<Issue> actualResult = issueService.findAllIssuesForAuthenticatedUser();
+
+        assertThat(actualResult)
+                .hasSize(2)
+                .containsExactly(issue1, issue2);
+
+        verify(issueRepository).findAllByUserEmailSortedByDate(email);
+    }
 
     @Test
     public void updateIssueStatus_IfSuccess() {
