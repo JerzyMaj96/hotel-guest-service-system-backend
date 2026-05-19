@@ -14,7 +14,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    image: jerzyk437/hgss-backend:1.5
+    image: jerzyk437/hgss-backend:2.0
     container_name: hgss-backend-container
     env_file:
       - fragile.env
