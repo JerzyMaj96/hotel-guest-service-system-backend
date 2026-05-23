@@ -56,7 +56,7 @@ public class IssueService {
         return savedIssue;
     }
 
-    public List<Issue> findAllIssuesForAuthenticatedUser() { // todo dostosować dla usera i technika
+    public List<Issue> findAllIssuesForAuthenticatedUser() {
         String email = authenticationFacade.getAuthenticatedUserEmail();
 
         return issueRepository.findAllByUserEmailSortedByDate(email);
