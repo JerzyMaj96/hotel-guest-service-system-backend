@@ -45,8 +45,8 @@ public class IssueController {
         return ResponseEntity.created(location).body(issueResponseDto);
     }
 
-    @GetMapping
-    public ResponseEntity<List<IssueResponseDto>> getAllIssues() {
+    @GetMapping("/user-prof")
+    public ResponseEntity<List<IssueResponseDto>> getAllIssuesForUser() {
 
         List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssuesForAuthenticatedUser().stream()
                 .map(Translator::convertIssueToDto)
@@ -55,8 +55,8 @@ public class IssueController {
         return ResponseEntity.ok(issueResponseDtoList);
     }
 
-    @GetMapping
-    public ResponseEntity<List<IssueResponseDto>> getAllIssuesTech() {
+    @GetMapping("/tech-prof")
+    public ResponseEntity<List<IssueResponseDto>> getAllIssuesForTech() {
         List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssues().stream()
                 .map(Translator::convertIssueToDto)
                 .toList();
