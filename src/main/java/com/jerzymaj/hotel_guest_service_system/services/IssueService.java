@@ -56,10 +56,15 @@ public class IssueService {
         return savedIssue;
     }
 
-    public List<Issue> findAllIssuesForAuthenticatedUser() {
+    public List<Issue> findAllIssuesForAuthenticatedUser() { // todo dostosować dla usera i technika
         String email = authenticationFacade.getAuthenticatedUserEmail();
 
         return issueRepository.findAllByUserEmailSortedByDate(email);
+    }
+
+    @PreAuthorize("hasRole('TECHNICAL_SUPPORT')")
+    public List<Issue> findAllIssues() {
+        return issueRepository.findAllByOrderByCreatedAtDesc();
     }
 
     @Transactional

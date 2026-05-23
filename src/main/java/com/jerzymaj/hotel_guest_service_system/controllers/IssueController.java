@@ -55,6 +55,15 @@ public class IssueController {
         return ResponseEntity.ok(issueResponseDtoList);
     }
 
+    @GetMapping
+    public ResponseEntity<List<IssueResponseDto>> getAllIssuesTech() {
+        List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssues().stream()
+                .map(Translator::convertIssueToDto)
+                .toList();
+
+        return ResponseEntity.ok(issueResponseDtoList);
+    }
+
     @GetMapping("/photos/{fileName}")
     public ResponseEntity<Resource> getPhoto (@PathVariable String fileName) throws MalformedURLException {
         Path filePath = Paths.get("upload-dir").toAbsolutePath().resolve(fileName);

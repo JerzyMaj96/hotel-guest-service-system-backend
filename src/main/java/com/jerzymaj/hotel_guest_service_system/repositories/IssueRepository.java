@@ -16,4 +16,11 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
             ORDER BY i.creationDate DESC
             """)
     List<Issue> findAllByUserEmailSortedByDate(@Param("userEmail") String userEmail);
+
+    @Query("""
+            SELECT i
+            FROM Issue i
+            ORDER BY i.creationDate DESC
+            """)
+    List<Issue> findAllByOrderByCreatedAtDesc();
 }
