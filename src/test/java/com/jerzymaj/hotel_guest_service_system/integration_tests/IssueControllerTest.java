@@ -109,6 +109,16 @@ public class IssueControllerTest {
 
     @Test
     @WithMockUser(roles = "TECHNICAL_SUPPORT")
+    public void findAllIssuesForTech() throws Exception {
+
+        mockMvc.perform(get("/hgss/api/issues/tech-prof")
+                        .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    @WithMockUser(roles = "TECHNICAL_SUPPORT")
     public void getPhoto_IfSuccess() throws Exception {
 
         String fileName = photoPart.getOriginalFilename();
