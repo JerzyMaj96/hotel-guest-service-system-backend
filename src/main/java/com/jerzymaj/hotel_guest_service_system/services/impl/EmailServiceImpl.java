@@ -23,13 +23,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendNotificationEmail(User user, String title, String description) {
+    public void sendNotificationEmail(User user, String title, String description, String recipientEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(authenticationFacade.getAuthenticatedUserEmail());
-            helper.setTo("tech@hotel.com");
+            helper.setTo(recipientEmail);
             helper.setSubject(title + "-" + user.getFirstName() + " " + user.getLastName());
             helper.setText(description);
 

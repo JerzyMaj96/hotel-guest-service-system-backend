@@ -11,6 +11,7 @@ import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,9 @@ public class IssueService {
     private final AuthenticationFacade authenticationFacade;
     private final EmailService emailService;
     private final PhotoStorageService photoStorageService;
+
+    @Value("${app.support.email}")
+    private String techEmail;
 
     @Transactional
     public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) {
@@ -51,7 +55,7 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
-        emailService.sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description());
+        emailService.sendNotificationEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description(), techEmail);
 
         return savedIssue;
     }
@@ -77,7 +81,8 @@ public class IssueService {
         issue.setStatus(issueStatus);
 
         emailService.sendNotificationEmail(issue.getUser(), "Issue status updated",
-                "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus);
+                "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus
+                , issue.getUser().getEmail());
     }
 
     private User getAuthenticatedUser() {
