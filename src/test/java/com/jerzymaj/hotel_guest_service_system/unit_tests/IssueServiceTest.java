@@ -49,9 +49,6 @@ public class IssueServiceTest {
     @InjectMocks
     private IssueService issueService;
 
-    @Value("${app.support.email}")
-    private String techEmail;
-
     private String email;
     private User user;
 
