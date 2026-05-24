@@ -98,9 +98,9 @@ public class IssueControllerTest {
 
     @Test
     @WithMockUser(username = "pawel@gmail.com", roles = "GUEST")
-    public void findAllIssues() throws Exception {
+    public void findAllIssuesForUser() throws Exception {
 
-        mockMvc.perform(get("/hgss/api/issues")
+        mockMvc.perform(get("/hgss/api/issues/user-prof")
                         .param("userId", user.getId().toString())
                         .contentType("application/json"))
                 .andExpect(status().isOk())
@@ -114,7 +114,7 @@ public class IssueControllerTest {
         String fileName = photoPart.getOriginalFilename();
         Path uploadPath = Paths.get("upload-dir").toAbsolutePath();
 
-        if(!Files.exists(uploadPath)) {
+        if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
