@@ -75,6 +75,9 @@ public class IssueService {
                 .orElseThrow(() -> new IssueNotFoundException("Issue with id " + issueId + " not found"));
 
         issue.setStatus(issueStatus);
+
+        emailService.sendNotificationEmail(issue.getUser(), "Issue status updated",
+                "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus);
     }
 
     private User getAuthenticatedUser() {
