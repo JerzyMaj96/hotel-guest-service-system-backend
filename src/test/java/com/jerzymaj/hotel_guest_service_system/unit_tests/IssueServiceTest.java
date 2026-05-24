@@ -12,15 +12,16 @@ import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl
 import com.jerzymaj.hotel_guest_service_system.services.EmailService;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import com.jerzymaj.hotel_guest_service_system.services.PhotoStorageService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,8 +49,24 @@ public class IssueServiceTest {
     @InjectMocks
     private IssueService issueService;
 
+    @Value("${app.support.email}")
+    private String techEmail;
+
+    private String email;
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        email = "test@gmail.com";
+
+        user = User.builder()
+                .id(1L)
+                .email(email)
+                .build();
+    }
+
     @Test
-    public void createIssueByUserId_IfSuccess() throws IOException {
+    public void createIssueByUserId_IfSuccess() {
         String email = "test@gmail.com";
         String title = "title";
         String description = "description";
@@ -68,16 +85,10 @@ public class IssueServiceTest {
                 null
         );
 
-        User user = User.builder()
-                .id(1L)
-                .email(email)
-                .build();
-
         when(authenticationFacade.getAuthenticatedUserEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(issueRepository.save(any(Issue.class))).thenAnswer(i -> i.getArguments()[0]);
         when(photoStorageService.savePhoto(photo)).thenReturn("test.jpg");
-        doNothing().when(emailService).sendNotificationEmail(user, title,description);
 
         Issue actualResult = issueService.createIssue(photo, issueCreateRequestDto);
 
@@ -112,7 +123,7 @@ public class IssueServiceTest {
     public void updateIssueStatus_IfSuccess() {
         Long issueId = 1L;
 
-        Issue issue = Issue.builder().id(issueId).status(IssueStatus.NEW).build();
+        Issue issue = Issue.builder().id(issueId).user(user).status(IssueStatus.NEW).build();
 
         when(issueRepository.findById(issueId)).thenReturn(Optional.of(issue));
 
