@@ -28,6 +28,9 @@ public class IssueService {
     private final NotificationService notificationService;
     private final PhotoStorageService photoStorageService;
 
+    @Value("${app.support.email}")
+    private String techEmail;
+
     @Transactional
     public Issue createIssue(MultipartFile photo, IssueCreateRequestDto issueCreateRequestDto) {
 
@@ -52,7 +55,7 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
-        notificationService.sendEmail(user, issueCreateRequestDto.title(), issueCreateRequestDto.description());
+        notificationService.send(techEmail, issueCreateRequestDto.title(), issueCreateRequestDto.description());
 
         return savedIssue;
     }
@@ -77,7 +80,7 @@ public class IssueService {
 
         issue.setStatus(issueStatus);
 
-        notificationService.sendEmail(issue.getUser(), "Issue status updated",
+        notificationService.send(issue.getUser().getEmail(), "Issue status updated",
                 "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus);
     }
 
