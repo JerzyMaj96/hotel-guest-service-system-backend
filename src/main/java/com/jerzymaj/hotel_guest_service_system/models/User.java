@@ -5,6 +5,7 @@ import com.jerzymaj.hotel_guest_service_system.enums.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -52,6 +53,10 @@ public class User implements UserDetails {
     @NotBlank
     @Column(unique = true)
     private String email;
+
+    @Column(length = 20)
+    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number format. Use E.164 format (e.g. +48123456789)")
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
