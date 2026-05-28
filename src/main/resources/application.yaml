@@ -17,6 +17,10 @@ app:
     allowed-origins: "${ALLOWED_ORIGIN:http://localhost:5173}"
   support:
     email: ${SUPPORT_EMAIL:tech@hotel.com}
+  twilio:
+    account-sid: "temp-sid"
+    auth-token: "temp-token"
+    phone-number: "+48000000000"
 
 ---
 spring:
