@@ -18,9 +18,9 @@ app:
   support:
     email: ${SUPPORT_EMAIL:tech@hotel.com}
   twilio:
-    account-sid: "temp-sid"
-    auth-token: "temp-token"
-    phone-number: "+48000000000"
+    account-sid: ${TWILIO_ACCOUNT_SID}
+    auth-token: ${TWILIO_AUTH_TOKEN}
+    phone-number: ${TWILIO_PHONE_NUMBER}
 
 ---
 spring:
