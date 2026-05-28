@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SmsNotificationSender implements NotificationSender {
 
-    @Value("${twilio.phone-number}")
+    @Value("${app.twilio.phone-number}")
     private String fromPhoneNumber;
 
     @Override
