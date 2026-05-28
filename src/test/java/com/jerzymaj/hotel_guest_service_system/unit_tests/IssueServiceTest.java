@@ -9,7 +9,7 @@ import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl;
-import com.jerzymaj.hotel_guest_service_system.services.EmailService;
+import com.jerzymaj.hotel_guest_service_system.services.NotificationService;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import com.jerzymaj.hotel_guest_service_system.services.PhotoStorageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +43,7 @@ public class IssueServiceTest {
     private PhotoStorageService photoStorageService;
 
     @Mock
-    private EmailService emailService;
+    private NotificationService notificationService;
 
     @InjectMocks
     private IssueService issueService;
