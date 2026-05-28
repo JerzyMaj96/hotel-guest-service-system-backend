@@ -9,7 +9,7 @@ import com.jerzymaj.hotel_guest_service_system.models.User;
 import com.jerzymaj.hotel_guest_service_system.repositories.IssueRepository;
 import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl;
-import com.jerzymaj.hotel_guest_service_system.services.NotificationService;
+import com.jerzymaj.hotel_guest_service_system.services.NotificationSender;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import com.jerzymaj.hotel_guest_service_system.services.PhotoStorageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ public class IssueServiceTest {
     private PhotoStorageService photoStorageService;
 
     @Mock
-    private NotificationService notificationService;
+    private NotificationSender notificationSender;
 
     @InjectMocks
     private IssueService issueService;

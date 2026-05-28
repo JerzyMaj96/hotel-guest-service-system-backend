@@ -30,7 +30,8 @@ public class UserServiceTest {
 
     @Test
     public void shouldRegisterUser_IfSuccess() {
-        RegisterUserDto registerUserDto = new RegisterUserDto("Jerzy", "Maj", "secret123", "test@gmail.com");
+        RegisterUserDto registerUserDto = new RegisterUserDto("Jerzy", "Maj", "secret123",
+                "test@gmail.com", "+48222333444");
 
         when(userRepository.existsByEmail("test@gmail.com")).thenReturn(false);
         when(passwordEncoder.encode("secret123")).thenReturn("HASH");

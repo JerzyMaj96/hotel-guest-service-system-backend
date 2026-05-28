@@ -8,7 +8,8 @@ import com.jerzymaj.hotel_guest_service_system.models.User;
 public class Translator {
 
     public static UserDto convertUserToDto(User user) {
-        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getCreationDate());
+        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                user.getPhoneNumber(), user.getCreationDate());
     }
 
     public static IssueResponseDto convertIssueToDto(Issue issue) {

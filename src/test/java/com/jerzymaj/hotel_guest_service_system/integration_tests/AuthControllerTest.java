@@ -39,7 +39,8 @@ public class AuthControllerTest {
 
     @Test
     public void registerUser() throws Exception {
-        RegisterUserDto registerUserDto = new RegisterUserDto("Paweł", "Kowalski", "secret123", "pawel@gmail.com");
+        RegisterUserDto registerUserDto = new RegisterUserDto("Paweł", "Kowalski", "secret123",
+                "pawel@gmail.com", "+48222333444");
 
         mockMvc.perform(post("/hgss/api/auth/register")
                         .contentType("application/json")
