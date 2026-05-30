@@ -1,5 +1,6 @@
 package com.jerzymaj.hotel_guest_service_system.services.impl;
 
+import com.jerzymaj.hotel_guest_service_system.DTOs.Notification;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import com.jerzymaj.hotel_guest_service_system.services.NotificationSender;
 import jakarta.mail.MessagingException;
@@ -21,15 +22,15 @@ public class EmailNotificationSender implements NotificationSender {
 
     @Override
     @Async
-    public void send(String recipient, String title, String description) {
+    public void send(Notification notification) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(authenticationFacade.getAuthenticatedUserEmail());
-            helper.setTo(recipient);
-            helper.setSubject(title);
-            helper.setText(description);
+            helper.setTo(notification.recipient());
+            helper.setSubject(notification.title());
+            helper.setText(notification.description());
 
             javaMailSender.send(message);
         } catch (MessagingException ex) {

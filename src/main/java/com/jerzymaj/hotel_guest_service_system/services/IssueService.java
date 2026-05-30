@@ -1,6 +1,7 @@
 package com.jerzymaj.hotel_guest_service_system.services;
 
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueCreateRequestDto;
+import com.jerzymaj.hotel_guest_service_system.DTOs.Notification;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
 import com.jerzymaj.hotel_guest_service_system.exceptions.IssueNotFoundException;
 import com.jerzymaj.hotel_guest_service_system.exceptions.UserNotFoundException;
@@ -56,7 +57,7 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
-        emailNotificationSender.send(techEmail, issueCreateRequestDto.title(), issueCreateRequestDto.description());
+        emailNotificationSender.send(new Notification(techEmail, issueCreateRequestDto.title(), issueCreateRequestDto.description()));
 
         return savedIssue;
     }
@@ -81,12 +82,12 @@ public class IssueService {
 
         issue.setStatus(issueStatus);
 
-        emailNotificationSender.send(issue.getUser().getEmail(), "Issue status updated",
-                "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus);
+        emailNotificationSender.send(new Notification(issue.getUser().getEmail(), "Issue status updated",
+                "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus));
 
         if (issue.getUser().getPhoneNumber() != null) {
-            smsNotificationSender.send(issue.getUser().getPhoneNumber(), "Issue status updated",
-                    "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus);
+            smsNotificationSender.send(new Notification(issue.getUser().getPhoneNumber(), "Issue status updated",
+                    "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus));
         }
     }
 

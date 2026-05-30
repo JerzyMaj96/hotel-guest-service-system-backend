@@ -1,5 +1,6 @@
 package com.jerzymaj.hotel_guest_service_system.services.impl;
 
+import com.jerzymaj.hotel_guest_service_system.DTOs.Notification;
 import com.jerzymaj.hotel_guest_service_system.services.NotificationSender;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -18,12 +19,12 @@ public class SmsNotificationSender implements NotificationSender {
 
     @Override
     @Async
-    public void send(String recipient, String title, String description) {
+    public void send(Notification notification) {
         try {
-            String fullMessage = title + "\n" + description;
+            String fullMessage = notification.title() + "\n" + notification.description();
 
             Message message = Message.creator(
-                    new PhoneNumber(recipient),
+                    new PhoneNumber(notification.recipient()),
                     new PhoneNumber(fromPhoneNumber),
                     fullMessage
             ).create();
@@ -31,7 +32,7 @@ public class SmsNotificationSender implements NotificationSender {
             log.info("SMS sent successfully. SID: {}", message.getSid());
 
         } catch (Exception ex) {
-            log.error("Failed to send SMS to {}: {}", recipient, ex.getMessage());
+            log.error("Failed to send SMS to {}: {}", notification.recipient(), ex.getMessage());
         }
     }
 }

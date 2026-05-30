@@ -1,5 +1,7 @@
 package com.jerzymaj.hotel_guest_service_system.services;
 
+import com.jerzymaj.hotel_guest_service_system.DTOs.Notification;
+
 public interface NotificationSender {
-    void send(String recipient, String title, String description);
+    void send(Notification notification);
 }
