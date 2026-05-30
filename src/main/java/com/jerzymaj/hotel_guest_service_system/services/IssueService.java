@@ -27,7 +27,7 @@ public class IssueService {
     private final AuthenticationFacade authenticationFacade;
     private final NotificationSender emailNotificationSender;
     private final NotificationSender smsNotificationSender;
-    private final PhotoStorageService photoStorageService;
+    private final PhotoStorage photoStorage;
 
     @Value("${app.support.email}")
     private String techEmail;
@@ -39,7 +39,7 @@ public class IssueService {
         String fileName = null;
 
         if (photo != null && !photo.isEmpty()) {
-            fileName = photoStorageService.savePhoto(photo);
+            fileName = photoStorage.savePhoto(photo);
         }
 
         Issue issue = Issue.builder()

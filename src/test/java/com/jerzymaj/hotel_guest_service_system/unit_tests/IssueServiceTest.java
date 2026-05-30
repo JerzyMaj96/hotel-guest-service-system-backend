@@ -11,7 +11,7 @@ import com.jerzymaj.hotel_guest_service_system.repositories.UserRepository;
 import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacadeImpl;
 import com.jerzymaj.hotel_guest_service_system.services.NotificationSender;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
-import com.jerzymaj.hotel_guest_service_system.services.PhotoStorageService;
+import com.jerzymaj.hotel_guest_service_system.services.PhotoStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +40,7 @@ public class IssueServiceTest {
     private AuthenticationFacadeImpl authenticationFacade;
 
     @Mock
-    private PhotoStorageService photoStorageService;
+    private PhotoStorage photoStorage;
 
     @Mock
     private NotificationSender notificationSender;
@@ -84,7 +84,7 @@ public class IssueServiceTest {
         when(authenticationFacade.getAuthenticatedUserEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(issueRepository.save(any(Issue.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(photoStorageService.savePhoto(photo)).thenReturn("test.jpg");
+        when(photoStorage.savePhoto(photo)).thenReturn("test.jpg");
 
         Issue actualResult = issueService.createIssue(photo, issueCreateRequestDto);
 
@@ -92,7 +92,7 @@ public class IssueServiceTest {
         assertThat(actualResult.getUser().getEmail()).isEqualTo(email);
         assertThat(actualResult.getPhotoPath()).contains("test.jpg");
         verify(issueRepository).save(any(Issue.class));
-        verify(photoStorageService).savePhoto(photo);
+        verify(photoStorage).savePhoto(photo);
     }
 
     @Test
