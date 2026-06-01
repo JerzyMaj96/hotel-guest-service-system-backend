@@ -40,6 +40,10 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
+                .claim("role", userPrincipal.getAuthorities().stream()
+                        .findFirst()
+                        .map(a -> a.getAuthority())
+                        .orElse("ROLE_GUEST"))
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS256)
