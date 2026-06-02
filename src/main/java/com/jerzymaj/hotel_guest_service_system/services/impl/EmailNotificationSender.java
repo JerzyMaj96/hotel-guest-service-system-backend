@@ -18,16 +18,20 @@ import org.springframework.stereotype.Service;
 public class EmailNotificationSender implements NotificationSender {
 
     private final JavaMailSender javaMailSender;
-    private final AuthenticationFacade authenticationFacade;
 
     @Override
     @Async
     public void send(Notification notification) {
+        if (notification.senderEmail() == null) {
+            log.warn("Skipping email notification to {}: sender email is missing.", notification.recipient());
+            return;
+        }
+
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom(authenticationFacade.getAuthenticatedUserEmail());
+            helper.setFrom(notification.senderEmail());
             helper.setTo(notification.recipient());
             helper.setSubject(notification.title());
             helper.setText(notification.description());

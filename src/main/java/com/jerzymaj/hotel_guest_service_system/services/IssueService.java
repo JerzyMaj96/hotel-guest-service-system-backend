@@ -57,7 +57,7 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
-        emailNotificationSender.send(new Notification(techEmail, issueCreateRequestDto.title(), issueCreateRequestDto.description()));
+        emailNotificationSender.send(new Notification(user.getEmail(), techEmail, issueCreateRequestDto.title(), issueCreateRequestDto.description()));
 
         return savedIssue;
     }
@@ -82,7 +82,7 @@ public class IssueService {
 
         issue.setStatus(issueStatus);
 
-        emailNotificationSender.send(new Notification(issue.getUser().getEmail(), "Issue status updated",
+        emailNotificationSender.send(new Notification(techEmail, issue.getUser().getEmail(), "Issue status updated",
                 "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus));
 
         if (issue.getUser().getPhoneNumber() != null) {
