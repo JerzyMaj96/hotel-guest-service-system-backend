@@ -54,8 +54,8 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @Column(length = 20) // todo sprawdzić regex
-    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number format. Use E.164 format (e.g. +48123456789)")
+    @Column(length = 16)
+    @Pattern(regexp = "^\\+[1-9][0-9]{7,14}$", message = "Invalid phone number format. Use E.164 format (e.g. +48123456789)")
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
