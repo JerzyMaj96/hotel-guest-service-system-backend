@@ -7,5 +7,5 @@ import jakarta.validation.constraints.Size;
 
 public record RegisterUserDto(@NotBlank String firstName, @NotBlank String lastName, @NotBlank @Size(min = 8) String password,
                               @Email @NotBlank  String email,
-                              @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Invalid phone number format. Use E.164 format (e.g. +48123456789)") String phoneNumber) {
+                              @Pattern(regexp = "^\\+[1-9][0-9]{7,14}$", message = "Invalid phone number format. Use E.164 format (e.g. +48123456789)") String phoneNumber) {
 }
