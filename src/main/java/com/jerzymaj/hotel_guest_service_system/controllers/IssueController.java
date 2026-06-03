@@ -5,11 +5,9 @@ import com.jerzymaj.hotel_guest_service_system.DTOs.IssueResponseDto;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
 import com.jerzymaj.hotel_guest_service_system.translator.Translator;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
