@@ -45,6 +45,7 @@ public class UserServiceTest {
 
         assertThat(actualResult.getId()).isEqualTo(1L);
         assertThat(actualResult.getEmail()).isEqualTo("test@gmail.com");
+        assertThat(actualResult.getPhoneNumber()).isEqualTo("+48222333444");
         verify(passwordEncoder).encode("secret123");
     }
 }

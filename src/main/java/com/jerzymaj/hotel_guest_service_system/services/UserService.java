@@ -44,6 +44,7 @@ public class UserService {
                 .lastName(registerUserDto.lastName())
                 .email(registerUserDto.email())
                 .password(passwordEncoder.encode(registerUserDto.password()))
+                .phoneNumber(registerUserDto.phoneNumber())
                 .userType(UserType.GUEST)
                 .build();
 
