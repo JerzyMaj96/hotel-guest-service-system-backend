@@ -65,16 +65,10 @@ public class IssueController {
 
     @GetMapping("/photos/{fileName}")
     public ResponseEntity<Resource> getPhoto (@PathVariable String fileName) throws MalformedURLException {
-        Path filePath = Paths.get("upload-dir").toAbsolutePath().resolve(fileName);
-        Resource resource = new UrlResource(filePath.toUri());
-        
-        if (!resource.exists() && !resource.isReadable()) {
-            throw new RuntimeException("Could not read file: " + fileName);
-        }
 
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
-                .body(resource);
+                .body(issueService.getPhoto(fileName));
     }
 
     @PatchMapping("/{issueId}/status")

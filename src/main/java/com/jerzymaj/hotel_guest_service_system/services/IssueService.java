@@ -13,10 +13,15 @@ import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -89,6 +94,17 @@ public class IssueService {
             smsNotificationSender.send(new Notification(issue.getUser().getPhoneNumber(), "Issue status updated",
                     "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus));
         }
+    }
+
+    public Resource getPhoto(String fileName) throws MalformedURLException {
+        Path filePath = Paths.get("upload-dir").toAbsolutePath().resolve(fileName);
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (!resource.exists() && !resource.isReadable()) {
+            throw new RuntimeException("Could not read file: " + fileName);
+        }
+
+        return resource;
     }
 
     private User getAuthenticatedUser() {
