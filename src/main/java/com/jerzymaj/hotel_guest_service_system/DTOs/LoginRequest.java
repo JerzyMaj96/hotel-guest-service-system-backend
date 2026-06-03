@@ -1,4 +1,11 @@
 package com.jerzymaj.hotel_guest_service_system.DTOs;
 
-public record LoginRequest(String email, String password) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(@NotBlank(message = "Email is required")
+                           @Email(message = "Invalid email format")
+                           String email,
+                           @NotBlank(message = "Password is required")
+                           String password) {
 }
