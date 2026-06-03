@@ -48,7 +48,8 @@ public class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName").value(registerUserDto.firstName()))
                 .andExpect(jsonPath("$.lastName").value(registerUserDto.lastName()))
-                .andExpect(jsonPath("$.email").value(registerUserDto.email()));
+                .andExpect(jsonPath("$.email").value(registerUserDto.email()))
+                .andExpect(jsonPath("$.phoneNumber").value(registerUserDto.phoneNumber()));
     }
 
     @Test
