@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("hgss/api/auth")
@@ -33,13 +30,7 @@ public class AuthController {
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
         UserDto createdUserDto = Translator.convertUserToDto(userService.registerUser(registerUserDto));
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(createdUserDto.id())
-                .toUri();
-
-        return ResponseEntity.created(location).body(createdUserDto);
+        return ResponseEntity.status(201).body(createdUserDto);
     }
 
     @PostMapping("/login")
