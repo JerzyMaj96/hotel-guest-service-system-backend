@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -52,6 +52,6 @@ public class AuthController {
                 )
         );
 
-        return jwtTokenProvider.generateToken(authentication);
+        return ResponseEntity.ok(jwtTokenProvider.generateToken(authentication));
     }
 }
