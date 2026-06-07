@@ -41,4 +41,9 @@ public class EmailNotificationSender implements NotificationSender {
             log.error("Failed to send async email notification", ex);
         }
     }
+
+    @Override
+    public boolean supports(String recipient) {
+        return recipient.contains("@");
+    }
 }

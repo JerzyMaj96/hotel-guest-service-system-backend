@@ -31,8 +31,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
-    private final NotificationSender emailNotificationSender;
-    private final NotificationSender smsNotificationSender;
+    private final NotificationSenderFactory notificationSenderFactory;
     private final PhotoStorage photoStorage;
 
     @Value("${app.support.email}")
@@ -62,7 +61,8 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
-        emailNotificationSender.send(new Notification(techEmail, issueCreateRequestDto.title(), issueCreateRequestDto.description(), user.getEmail()));
+        notificationSenderFactory.getFor(user.getEmail()).send(new Notification(user.getEmail(), "Issue created",
+                "Your issue '" + issue.getTitle() + "' has been created and is being reviewed by our technical support team.", techEmail));
 
         return savedIssue;
     }
@@ -87,11 +87,11 @@ public class IssueService {
 
         issue.setStatus(issueStatus);
 
-        emailNotificationSender.send(new Notification(issue.getUser().getEmail(), "Issue status updated",
+        notificationSenderFactory.getFor(issue.getUser().getEmail()).send(new Notification(issue.getUser().getEmail(), "Issue status updated",
                 "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus, techEmail));
 
         if (issue.getUser().getPhoneNumber() != null) {
-            smsNotificationSender.send(new Notification(issue.getUser().getPhoneNumber(), "Issue status updated",
+            notificationSenderFactory.getFor(issue.getUser().getPhoneNumber()).send(new Notification(issue.getUser().getPhoneNumber(), "Issue status updated",
                     "The status of your issue '" + issue.getTitle() + "' has been updated to: " + issueStatus));
         }
     }

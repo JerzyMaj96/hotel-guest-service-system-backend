@@ -35,4 +35,9 @@ public class SmsNotificationSender implements NotificationSender {
             log.error("Failed to send SMS to {}: {}", notification.recipient(), ex.getMessage());
         }
     }
+
+    @Override
+    public boolean supports(String recipient) {
+        return recipient.matches("^\\+[1-9][0-9]{7,14}$");
+    }
 }
