@@ -1,7 +1,6 @@
 package com.jerzymaj.hotel_guest_service_system.services.impl;
 
 import com.jerzymaj.hotel_guest_service_system.DTOs.Notification;
-import com.jerzymaj.hotel_guest_service_system.security.AuthenticationFacade;
 import com.jerzymaj.hotel_guest_service_system.services.NotificationSender;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -10,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class EmailNotificationSender implements NotificationSender {
 

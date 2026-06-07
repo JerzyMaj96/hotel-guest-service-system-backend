@@ -3,7 +3,7 @@ package com.jerzymaj.hotel_guest_service_system.services.impl;
 import com.jerzymaj.hotel_guest_service_system.exceptions.PhotoStorageException;
 import com.jerzymaj.hotel_guest_service_system.services.PhotoStorage;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-@Service
+@Component
 public class PhotoStorageImpl implements PhotoStorage {
 
     @Value("${storage.upload-dir:upload-dir}")
