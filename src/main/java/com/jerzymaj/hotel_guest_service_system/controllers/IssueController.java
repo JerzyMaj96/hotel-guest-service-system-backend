@@ -3,8 +3,9 @@ package com.jerzymaj.hotel_guest_service_system.controllers;
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueCreateRequestDto;
 import com.jerzymaj.hotel_guest_service_system.DTOs.IssueResponseDto;
 import com.jerzymaj.hotel_guest_service_system.enums.IssueStatus;
+import com.jerzymaj.hotel_guest_service_system.mappers.IssueMapper;
 import com.jerzymaj.hotel_guest_service_system.services.IssueService;
-import com.jerzymaj.hotel_guest_service_system.translator.Translator;
+import com.jerzymaj.hotel_guest_service_system.mappers.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -24,12 +25,13 @@ import java.util.List;
 public class IssueController {
 
     private final IssueService issueService;
+    private final IssueMapper issueMapper;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<IssueResponseDto> createIssue(@RequestPart(value = "photo", required = false) MultipartFile photo,
                                                         @Valid @RequestPart(value = "issue") IssueCreateRequestDto issueCreateRequestDto) {
 
-        IssueResponseDto issueResponseDto = Translator.convertIssueToDto(issueService.createIssue(photo, issueCreateRequestDto));
+        IssueResponseDto issueResponseDto = issueMapper.toDto(issueService.createIssue(photo, issueCreateRequestDto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -44,7 +46,7 @@ public class IssueController {
     public ResponseEntity<List<IssueResponseDto>> getAllIssuesForUser() {
 
         List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssuesForAuthenticatedUser().stream()
-                .map(Translator::convertIssueToDto)
+                .map(IssueMapper::toDto)
                 .toList();
 
         return ResponseEntity.ok(issueResponseDtoList);
@@ -53,7 +55,7 @@ public class IssueController {
     @GetMapping("/tech-prof")
     public ResponseEntity<List<IssueResponseDto>> getAllIssuesForTech() {
         List<IssueResponseDto> issueResponseDtoList = issueService.findAllIssues().stream()
-                .map(Translator::convertIssueToDto)
+                .map(IssueMapper::toDto)
                 .toList();
 
         return ResponseEntity.ok(issueResponseDtoList);

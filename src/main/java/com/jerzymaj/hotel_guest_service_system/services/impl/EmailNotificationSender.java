@@ -21,7 +21,7 @@ public class EmailNotificationSender implements NotificationSender {
     @Override
     @Async
     public void send(Notification notification) {
-        if (notification.senderEmail() == null) {
+        if (notification.senderEmail() == null) { // todo możliwe że niekonieczne
             log.warn("Skipping email notification to {}: sender email is missing.", notification.recipient());
             return;
         }

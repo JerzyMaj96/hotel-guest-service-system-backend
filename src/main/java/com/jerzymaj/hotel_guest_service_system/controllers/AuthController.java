@@ -4,8 +4,8 @@ import com.jerzymaj.hotel_guest_service_system.DTOs.LoginRequest;
 import com.jerzymaj.hotel_guest_service_system.DTOs.RegisterUserDto;
 import com.jerzymaj.hotel_guest_service_system.DTOs.UserDto;
 import com.jerzymaj.hotel_guest_service_system.configuration.JwtProvider;
+import com.jerzymaj.hotel_guest_service_system.mappers.UserMapper;
 import com.jerzymaj.hotel_guest_service_system.services.UserService;
-import com.jerzymaj.hotel_guest_service_system.translator.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtTokenProvider;
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
-        UserDto createdUserDto = Translator.convertUserToDto(userService.registerUser(registerUserDto));
+        UserDto createdUserDto = userMapper.toDto(userService.registerUser(registerUserDto));
 
         return ResponseEntity.status(201).body(createdUserDto);
     }
