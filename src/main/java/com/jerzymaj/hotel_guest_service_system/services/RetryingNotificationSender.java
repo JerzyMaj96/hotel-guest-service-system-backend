@@ -23,7 +23,8 @@ public class RetryingNotificationSender implements NotificationSender {
                 delegate.send(notification);
                 return;
             } catch (Exception ex) {
-                if (retry++ >= maxRetries) {
+                retry++;
+                if (retry >= maxRetries) {
                     log.error("Number of retries has reached it's limit {}", notification.recipient());
                     throw ex;
                 }
