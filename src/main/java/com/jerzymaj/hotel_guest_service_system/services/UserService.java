@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +57,21 @@ public class UserService {
             throw new UserNotFoundException("User " + id + " not found");
         }
         userRepository.deleteById(id);
+    }
+
+    public User findOrCreateOAuth2User(String email, String firstName, String lastName) {
+        if (!userRepository.existsByEmail(email)) {
+            User user = User.builder()
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .email(email)
+                    .userType(UserType.GUEST)
+                    .build();
+
+            return userRepository.save(user);
+        }
+
+        return findUserByEmail(email);
     }
 }

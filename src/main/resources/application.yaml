@@ -8,6 +8,15 @@ spring:
   profiles:
     active: dev
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: [ email, profile ]
+
 logging:
   level:
     root: INFO
@@ -25,6 +34,8 @@ app:
     account-sid: ${TWILIO_ACCOUNT_SID}
     auth-token: ${TWILIO_AUTH_TOKEN}
     phone-number: ${TWILIO_PHONE_NUMBER}
+  oauth2:
+    redirect-uri: "${OAUTH2_REDIRECT_URI:http://localhost:5173/oauth2/redirect}"
 
 ---
 spring:
