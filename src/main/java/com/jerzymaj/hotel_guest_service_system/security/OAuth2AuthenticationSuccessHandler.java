@@ -42,9 +42,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        // authentication.getPrincipal() here is an OAuth2User (Google's profile),
-        // NOT our own UserDetails - that's why we can't pass "authentication" straight
-        // into jwtProvider.generateToken(), it expects a UserDetails principal.
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
         String email = oAuth2User.getAttribute("email");
@@ -59,8 +56,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         User user = userService.findOrCreateOAuth2User(email, firstName, lastName);
 
-        // Rebuild an Authentication whose principal IS a UserDetails, so it can be
-        // fed into the same JwtProvider used by the classic /login endpoint.
         Authentication userAuthentication = new UsernamePasswordAuthenticationToken(
                 user, null, user.getAuthorities());
         String jwt = jwtProvider.generateToken(userAuthentication);
